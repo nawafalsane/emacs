@@ -134,7 +134,9 @@
 
   :ensure t
   :config
-  (load-theme 'nord t))
+  (load-theme 'nord t)
+ )
+
 
 
 (use-package powerline
@@ -146,6 +148,7 @@
   (progn
     (require 'airline-themes)
 (load-theme 'airline-base16_nord t)
+
     )
   :config
   (progn
@@ -157,7 +160,11 @@
           airline-utf-glyph-subseparator-right  #xe0b3
           airline-utf-glyph-branch              #xe0a0
           airline-utf-glyph-readonly            #xe0a2
-          airline-utf-glyph-linenumber          #xe0a1))
+          airline-utf-glyph-linenumber          #xe0a1
+          airline-cursor-colors t
+	  )
+
+    )
   )
 
 ;; which-key
@@ -204,7 +211,15 @@
 )
 (set-keys
 "ff" 'find-file
+"fs" 'save-buffer
  )
+(declare-prefixes-for-major-mode
+ 'org-mode
+ "h"  "headings"
+)
+(set-keys-for-major-mode 'org-mode-map
+"hh" 'org-ctrl-c-ret
+			 )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
