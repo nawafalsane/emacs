@@ -92,14 +92,6 @@
 ;; Delete trailing whitespace before save
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; Theme for emacs
-(load-theme 'wombat)
-
-
-
-;; which-key
-(use-package which-key
-  :ensure t)
 
 ;; Evil mode
 (use-package evil
@@ -167,6 +159,24 @@
           airline-utf-glyph-linenumber          #xe0a1))
   )
 
+;; which-key
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+
+
+
+(use-package general :ensure t
+  :config
+  (general-define-key
+   :states '(normal visual insert emacs)
+   :prefix "SPC"
+   :non-normal-prefix "C-SPC"
+    "f"   '(find-file :which-key "find file")
+
+
+   ))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
