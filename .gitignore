@@ -1,3 +1,5 @@
 elpa/
+private/
+.DS_Store
 auto-save-list/
 session*
