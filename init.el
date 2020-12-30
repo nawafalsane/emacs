@@ -11,6 +11,9 @@
   (package-install 'use-package))
 (require 'use-package)
 
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
+
 (defconst private-dir  (expand-file-name "private" user-emacs-directory))
 (defconst temp-dir (format "%s/cache" private-dir)
   "Hostname-based elisp temp directories")
@@ -23,6 +26,10 @@
 (set-selection-coding-system 'utf-8)   ; please
 (prefer-coding-system        'utf-8)   ; with sugar on top
 (setq default-process-coding-system '(utf-8-unix . utf-8-unix))
+
+;; Full screen
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . fullheight))
 
 ;; Emacs customizations
 (setq confirm-kill-emacs                  'y-or-n-p
@@ -45,8 +52,10 @@
       inhibit-startup-message            t
       fringes-outside-margins            t
       x-select-enable-clipboard          t
-      use-package-always-ensure          t)
-
+      use-package-always-ensure          t
+      tab-always-indent 'complete ;; enable indent
+      indent-tabs-mode nil ;; enable indent
+      )
 ;; Bookmarks
 (setq
  ;; persistent bookmarks
@@ -84,11 +93,8 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Theme for emacs
-(use-package dracula-theme
-  :defer t
-  :init
-  (load-theme 'dracula t)
-  :ensure t )
+(load-theme 'wombat)
+
 
 
 ;; which-key
@@ -99,22 +105,45 @@
 (use-package evil
   :ensure t ;; install the evil package if not installed
   :init ;; tweak evil's configuration before loading it
+  (setq evil-want-integration nil) ;; required by evil-collection
+  (setq evil-want-keybinding nil) ;; required vy evil-ecollection
   (setq evil-search-module 'evil-search)
   (setq evil-ex-complete-emacs-commands nil)
   (setq evil-vsplit-window-right t)
   (setq evil-split-window-below t)
   (setq evil-shift-round nil)
   (setq evil-want-C-u-scroll t)
-  ;; Change Cursor Color
-  (setq evil-emacs-state-cursor '("red" box))
-  (setq evil-normal-state-cursor '("pink" box))
-(setq evil-visual-state-cursor '("orange" box))
-(setq evil-insert-state-cursor '("pink" bar))
-(setq evil-replace-state-cursor '("pink" bar))
-(setq evil-operator-state-cursor '("pink" hollow))
- :config ;; tweak evil after loading it
+:config ;; tweak evil after loading it
   (evil-mode)
+(evil-select-search-module 'evil-search-module 'evil-search)
+
+;; ex commands, which a vim user is likely to be familiar with
+  (use-package evil-expat
+    :ensure t
+    :defer t)
+;; vim-like keybindings everywhere in emacs
+  (use-package evil-collection
+    :after evil
+    :ensure t
+    :config
+    (evil-collection-init))
+
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode))
+
+  (use-package evil-indent-textobject
+    :ensure t)
   )
+
+(use-package nord-theme
+
+  :ensure t
+  :config
+  (load-theme 'nord t))
+
+
 (use-package powerline
   :ensure t
   )
@@ -123,7 +152,7 @@
   :init
   (progn
     (require 'airline-themes)
-(load-theme 'airline-dark_minimal t)
+(load-theme 'airline-base16_nord t)
     )
   :config
   (progn
@@ -135,14 +164,15 @@
           airline-utf-glyph-subseparator-right  #xe0b3
           airline-utf-glyph-branch              #xe0a0
           airline-utf-glyph-readonly            #xe0a2
-          airline-utf-glyph-linenumber          #xe0a1)))
+          airline-utf-glyph-linenumber          #xe0a1))
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (use-package))))
+ '(package-selected-packages '(use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
